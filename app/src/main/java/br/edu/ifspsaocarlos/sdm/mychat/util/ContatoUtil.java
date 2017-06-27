@@ -1,8 +1,5 @@
 package br.edu.ifspsaocarlos.sdm.mychat.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,7 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import br.edu.ifspsaocarlos.sdm.mychat.R;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
 
@@ -65,23 +61,5 @@ public class ContatoUtil {
         contato.setNome(json.getString(ContatoWS.NOME));
         contato.setApelido(json.getString(ContatoWS.APELIDO));
         return contato;
-    }
-
-    /**
-     * Salva o perfil do usuário padrão do sistema
-     *
-     * @param context
-     * @param contato
-     */
-    public static void criarPerfil(Context context, Contato contato) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.perfil_usuario), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putInt(context.getString(R.string.id_perfil), contato.getId());
-        editor.putString(context.getString(R.string.nome_perfil), contato.getNome());
-        editor.putString(context.getString(R.string.apelido_perfil), contato.getApelido());
-
-        editor.commit();
     }
 }

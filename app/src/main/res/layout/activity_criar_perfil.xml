@@ -6,6 +6,16 @@
     android:orientation="vertical"
     tools:context="br.edu.ifspsaocarlos.sdm.mychat.view.CriarPerfilActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/criar_perfil"
+        android:textSize="24sp"
+        android:layout_marginTop="15sp"
+        android:layout_marginBottom="15sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="italic|bold" />
+
     <EditText
         android:id="@+id/nome"
         android:layout_width="match_parent"
@@ -16,12 +26,15 @@
         android:id="@+id/apelido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
         android:hint="@string/informe_apelido" />
 
     <Button
         android:id="@+id/bt_salvar"
-        android:layout_width="match_parent"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15sp"
         android:onClick="criarPerfil"
         android:text="@string/salvar" />
 

@@ -1,6 +1,7 @@
 package br.edu.ifspsaocarlos.sdm.mychat.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
@@ -25,6 +27,7 @@ import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
 public class CriarPerfilActivity extends Activity {
     private EditText editNome;
     private EditText editApelido;
+    private PerfilDAO perfilDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class CriarPerfilActivity extends Activity {
 
         editNome = (EditText) findViewById(R.id.nome);
         editApelido = (EditText) findViewById(R.id.apelido);
+
+        perfilDao = new PerfilDAO(this);
     }
 
     public void criarPerfil(View v) {
@@ -63,7 +68,7 @@ public class CriarPerfilActivity extends Activity {
                         contato.setId(response.getInt(ContatoWS.ID));
                         contato.setNome(response.getString(ContatoWS.NOME));
                         contato.setApelido(response.getString(ContatoWS.APELIDO));
-                        ContatoUtil.criarPerfil(CriarPerfilActivity.this, contato);
+                        criarPerfil(contato);
                     }
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao tentar criar o perfil");
@@ -79,5 +84,16 @@ public class CriarPerfilActivity extends Activity {
                 Toast.makeText(CriarPerfilActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    private void criarPerfil(Contato contato) {
+        perfilDao.criarPerfil(contato);
+        Toast.makeText(CriarPerfilActivity.this, getString(R.string.perfil_criado), Toast.LENGTH_LONG).show();
+        abrirListaDeContatos();
+    }
+
+    private void abrirListaDeContatos() {
+        Intent intent = new Intent(CriarPerfilActivity.this, ListaContatosActivity.class);
+        startActivity(intent);
     }
 }

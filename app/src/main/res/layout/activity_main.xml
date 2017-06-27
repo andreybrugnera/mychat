@@ -25,36 +25,39 @@
         android:layout_marginTop="5dp"
         android:textColor="@android:color/white" />
 
-    <TextView
-        android:id="@+id/tv_criar_perfil"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/bt_criar_perfil"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:text="@string/criar_perfil"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:onClick="criarPerfil" />
 
-    <TextView
-        android:id="@+id/tv_entrar"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/bt_entrar"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:text="@string/entrar"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:onClick="entrar" />
 
-    <TextView
-        android:id="@+id/tv_sair"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/bt_sair"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:text="@string/sair"
         android:textSize="20sp"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:onClick="sair" />
 
 </LinearLayout>

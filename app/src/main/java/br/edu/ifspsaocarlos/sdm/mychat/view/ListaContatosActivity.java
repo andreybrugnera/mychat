@@ -3,7 +3,6 @@ package br.edu.ifspsaocarlos.sdm.mychat.view;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -60,9 +59,6 @@ public class ListaContatosActivity extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_novo:
-                cadastrarContato();
-                break;
             case R.id.menu_editar:
                 break;
             case R.id.menu_remover:
@@ -70,11 +66,6 @@ public class ListaContatosActivity extends ListActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void cadastrarContato() {
-        Intent intent = new Intent(ListaContatosActivity.this, CriarPerfilActivity.class);
-        startActivity(intent);
     }
 
     private void carregarContatos() {
@@ -172,10 +163,5 @@ public class ListaContatosActivity extends ListActivity {
                 Toast.makeText(ListaContatosActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

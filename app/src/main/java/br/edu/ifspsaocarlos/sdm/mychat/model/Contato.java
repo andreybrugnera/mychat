@@ -9,6 +9,16 @@ public class Contato {
     private String apelido;
     private boolean selecionado;
 
+    public Contato() {
+    }
+
+    public Contato(Contato contato) {
+        this.id = contato.getId();
+        this.nome = contato.nome;
+        this.apelido = contato.getApelido();
+        this.selecionado = contato.isSelecionado();
+    }
+
     public Integer getId() {
         return id;
     }
