@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_dark"
+    tools:context="br.edu.ifspsaocarlos.sdm.mychat.view.MainActivity">
+
+    <ImageView
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="80sp"
+        android:minWidth="124dp"
+        android:minHeight="124dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textSize="28sp"
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_criar_perfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:text="@string/criar_perfil"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_entrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:text="@string/entrar"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_sair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="@string/sair"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

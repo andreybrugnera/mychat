@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MyChat</string>
+    <string name="contatos">Contatos</string>
+    <string name="erro_executar_operacao">Erro ao executar a operação</string>
+    <string name="title_activity_lista_contatos">ListaContatosActivity</string>
+    <string name="novo">Novo</string>
+    <string name="editar">Editar</string>
+    <string name="remover">Remover</string>
+    <string name="deseja_remover_contatos">Deseja realmente remover os contato(s) selecionado(s)?</string>
+    <string name="remover_contatos">Remover contato(s)</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="informe_nome">Informe o nome</string>
+    <string name="informe_apelido">Informe o apelido</string>
+    <string name="novo_contato">Novo contato</string>
+    <string name="salvar">Salvar</string>
+    <string name="criar_perfil">Criar perfil</string>
+    <string name="entrar">Entrar</string>
+    <string name="sair">Sair</string>
+    <string name="perfil_usuario">perfil_usuario</string>
+    <string name="id_perfil">id_perfil</string>
+    <string name="nome_perfil">nome_perfil</string>
+    <string name="apelido_perfil">apelido_perfil</string>
+</resources>
