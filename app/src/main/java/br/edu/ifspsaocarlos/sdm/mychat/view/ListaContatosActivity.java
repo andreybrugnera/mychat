@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.view.adapter.ContatoAdapter;
@@ -35,16 +36,20 @@ public class ListaContatosActivity extends ListActivity {
     private List<Contato> listaContatos = new ArrayList<>();
     private ContatoAdapter contatoAdapter;
     private ProgressBar barraProgresso;
+    private PerfilDAO perfilDao;
+    private Contato perfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getString(R.string.contatos));
+
         setContentView(R.layout.activity_lista_contatos);
 
-        this.barraProgresso = (ProgressBar) findViewById(R.id.progress_bar);
-        this.contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatos);
+        barraProgresso = (ProgressBar) findViewById(R.id.progress_bar);
+        contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatos);
+        perfilDao = new PerfilDAO(this);
 
+        carregarPerfil();
         carregarContatos();
 
         setListAdapter(contatoAdapter);
@@ -64,8 +69,16 @@ public class ListaContatosActivity extends ListActivity {
             case R.id.menu_remover:
                 removerContatosSelecionados();
                 break;
+            case R.id.menu_sair:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void carregarPerfil() {
+        this.perfil = perfilDao.buscaPerfil();
+        setTitle(getString(R.string.contatos) + " de " + perfil.getNome());
     }
 
     private void carregarContatos() {
