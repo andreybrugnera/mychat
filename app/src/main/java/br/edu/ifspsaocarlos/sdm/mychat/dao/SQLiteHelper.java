@@ -26,16 +26,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_PERFIL = "CREATE TABLE " + PERFIL_TABLE + " (" +
             PERFIL_ID + " INTEGER PRIMARY KEY, " +
             PERFIL_NOME + " TEXT NOT NULL, " +
-            PERFIL_APELIDO + " TEXT NOT NULL);";
+            PERFIL_APELIDO + " TEXT NOT NULL) ";
 
     private static final String CREATE_TABLE_MENSAGEM = "CREATE TABLE " + MENSAGENS_TABLE + " (" +
             MSG_ID + " INTEGER PRIMARY KEY, " +
             MSG_ID_ORIGEM + " INTEGER NOT NULL, " +
             MSG_ID_DESTINO + " INTEGER NOT NULL, " +
             MSG_CORPO + " TEXT, " +
-            MSG_ASSUNTO + " TEXT);";
-
-    public static final String DATABASE_CREATE = CREATE_TABLE_PERFIL + CREATE_TABLE_MENSAGEM;
+            MSG_ASSUNTO + " TEXT) ";
 
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,7 +41,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
+        database.execSQL(CREATE_TABLE_PERFIL);
+        database.execSQL(CREATE_TABLE_MENSAGEM);
     }
 
     @Override

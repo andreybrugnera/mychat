@@ -49,14 +49,14 @@ public class ContatoAdapter extends ArrayAdapter<Contato> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.contato_layout, null);
 
-            CheckBox chkSelecionado = (CheckBox) convertView.findViewById(R.id.selecionado);
+            CheckBox chkSelecionado = (CheckBox) convertView.findViewById(R.id.cb_selecionado);
             TextView txtNome = (TextView) convertView.findViewById(R.id.nome);
             TextView txtApelido = (TextView) convertView.findViewById(R.id.apelido);
 
             viewHolder = new ViewHolder(txtNome, txtApelido, chkSelecionado);
             convertView.setTag(viewHolder);
 
-            viewHolder.getSelecionado().setOnClickListener(new View.OnClickListener() {
+            viewHolder.getComboBoxSelecionado().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CheckBox chkBox = (CheckBox) v;
@@ -71,8 +71,8 @@ public class ContatoAdapter extends ArrayAdapter<Contato> {
         Contato contato = listaContatos.get(position);
         viewHolder.getNome().setText(contato.getNome());
         viewHolder.getApelido().setText(contato.getApelido());
-        viewHolder.getSelecionado().setChecked(contato.isSelecionado());
-        viewHolder.getSelecionado().setTag(contato);
+        viewHolder.getComboBoxSelecionado().setChecked(contato.isSelecionado());
+        viewHolder.getComboBoxSelecionado().setTag(contato);
 
         return convertView;
     }
@@ -80,12 +80,12 @@ public class ContatoAdapter extends ArrayAdapter<Contato> {
     private class ViewHolder {
         private TextView nome;
         private TextView apelido;
-        private CheckBox selecionado;
+        private CheckBox comboBoxSelecionado;
 
-        public ViewHolder(TextView nome, TextView apelido, CheckBox selecionado) {
+        public ViewHolder(TextView nome, TextView apelido, CheckBox comboBoxSelecionado) {
             this.nome = nome;
             this.apelido = apelido;
-            this.selecionado = selecionado;
+            this.comboBoxSelecionado = comboBoxSelecionado;
         }
 
         public TextView getNome() {
@@ -96,8 +96,8 @@ public class ContatoAdapter extends ArrayAdapter<Contato> {
             return apelido;
         }
 
-        public CheckBox getSelecionado() {
-            return selecionado;
+        public CheckBox getComboBoxSelecionado() {
+            return comboBoxSelecionado;
         }
     }
 }

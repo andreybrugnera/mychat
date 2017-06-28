@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">MyChat</string>
     <string name="contatos">Contatos</string>
+    <string name="contatos_de">Contatos de</string>
     <string name="erro_executar_operacao">Erro ao executar a operação</string>
     <string name="title_activity_lista_contatos">ListaContatosActivity</string>
     <string name="novo">Novo</string>
     <string name="editar">Editar perfil</string>
     <string name="remover">Remover</string>
-    <string name="deseja_remover_contatos">Deseja realmente remover os contato(s) selecionado(s)?</string>
+    <string name="deseja_remover_contatos">Deseja realmente remover os contato(s) comboBoxSelecionado(s)?</string>
     <string name="remover_contatos">Remover contato(s)</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
@@ -18,4 +19,5 @@
     <string name="entrar">Entrar</string>
     <string name="sair">Sair</string>
     <string name="perfil_criado">Perfil criado</string>
+    <string name="chat_com">Chat com</string>
 </resources>

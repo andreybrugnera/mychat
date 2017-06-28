@@ -1,9 +1,11 @@
 package br.edu.ifspsaocarlos.sdm.mychat.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Andrey Brugnera on 17/06/2017.
  */
-public class Contato {
+public class Contato implements Serializable {
     private Integer id;
     private String nome;
     private String apelido;

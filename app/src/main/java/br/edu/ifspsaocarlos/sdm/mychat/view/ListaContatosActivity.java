@@ -3,11 +3,13 @@ package br.edu.ifspsaocarlos.sdm.mychat.view;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -78,7 +80,7 @@ public class ListaContatosActivity extends ListActivity {
 
     private void carregarPerfil() {
         this.perfil = perfilDao.buscaPerfil();
-        setTitle(getString(R.string.contatos) + " de " + perfil.getNome());
+        setTitle(getString(R.string.contatos_de) + " " + perfil.getNome());
     }
 
     private void carregarContatos() {
@@ -176,5 +178,20 @@ public class ListaContatosActivity extends ListActivity {
                 Toast.makeText(ListaContatosActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Contato destinatario = (Contato) getListAdapter().getItem(position);
+        iniciarConversa(destinatario);
+    }
+
+    private void iniciarConversa(Contato destinatario) {
+        Log.i(getString(R.string.app_name), "Iniciar chat com " + destinatario.getNome());
+        Intent intent = new Intent(ListaContatosActivity.this, ChatActivity.class);
+        intent.putExtra("perfil", perfil);
+        intent.putExtra("destinatario", destinatario);
+        startActivity(intent);
     }
 }
