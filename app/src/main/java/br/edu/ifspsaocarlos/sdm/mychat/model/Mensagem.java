@@ -58,6 +58,7 @@ public class Mensagem {
 
     public void setOrigem(Contato origem) {
         this.origem = origem;
+        this.idOrigem = origem.getId();
     }
 
     public Contato getDestino() {
@@ -66,6 +67,7 @@ public class Mensagem {
 
     public void setDestino(Contato destino) {
         this.destino = destino;
+        this.idDestino = destino.getId();
     }
 }
 

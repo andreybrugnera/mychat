@@ -9,10 +9,12 @@ import android.widget.Button;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
 import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
+import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 
 public class MainActivity extends Activity {
     private Button btEntrar;
     private Button btCriarPerfil;
+    private Contato perfil;
 
     private PerfilDAO perfilDao;
 
@@ -33,11 +35,13 @@ public class MainActivity extends Activity {
     }
 
     private boolean perfilCriado() {
-        return perfilDao.buscaPerfil() != null;
+        this.perfil = perfilDao.buscaPerfil();
+        return perfil != null;
     }
 
     public void entrar(View v) {
         Intent intent = new Intent(MainActivity.this, ListaContatosActivity.class);
+        intent.putExtra("perfil", perfil);
         startActivity(intent);
     }
 

@@ -1,5 +1,6 @@
 package br.edu.ifspsaocarlos.sdm.mychat.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,6 +53,9 @@ public class MensagemDAO {
                 mensagem.setIdDestino(cursor.getInt(2));
                 mensagem.setCorpo(cursor.getString(3));
                 mensagem.setAssunto(cursor.getString(4));
+                mensagem.setOrigem(perfil);
+                mensagem.setDestino(remetente);
+
                 listaMensagens.add(mensagem);
                 cursor.moveToNext();
             }
@@ -105,6 +109,15 @@ public class MensagemDAO {
                 mensagem.setIdDestino(cursor.getInt(2));
                 mensagem.setCorpo(cursor.getString(3));
                 mensagem.setAssunto(cursor.getString(4));
+
+                if (mensagem.getIdOrigem() == perfil.getId()) {
+                    mensagem.setOrigem(perfil);
+                    mensagem.setDestino(contato);
+                } else {
+                    mensagem.setOrigem(contato);
+                    mensagem.setDestino(perfil);
+                }
+
                 listaMensagens.add(mensagem);
                 cursor.moveToNext();
             }
@@ -112,5 +125,17 @@ public class MensagemDAO {
         }
         database.close();
         return listaMensagens;
+    }
+
+    public void salvarMensagem(Mensagem mensagem) {
+        database = dbHelper.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.MSG_ID, mensagem.getId());
+        values.put(SQLiteHelper.MSG_CORPO, mensagem.getCorpo());
+        values.put(SQLiteHelper.MSG_ASSUNTO, mensagem.getAssunto());
+        values.put(SQLiteHelper.MSG_ID_ORIGEM, mensagem.getIdOrigem());
+        values.put(SQLiteHelper.MSG_ID_DESTINO, mensagem.getIdDestino());
+        database.insert(SQLiteHelper.MENSAGENS_TABLE, null, values);
+        database.close();
     }
 }

@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.edu.ifspsaocarlos.sdm.mychat.view.ChatActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/layout_tv_mensagem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="#000000"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_mensagem"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_marginTop="2sp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:hint="@string/mensagem"
+            android:maxLength="150" />
+
+        <Button
+            android:id="@+id/bt_enviar_msg"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_marginTop="2sp"
+            android:layout_weight="2"
+            android:background="#C0DB67"
+            android:onClick="enviarMensagem"
+            android:text="@string/enviar" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_mensagens"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/layout_tv_mensagem"
+        android:drawSelectorOnTop="false" />
+</RelativeLayout>
