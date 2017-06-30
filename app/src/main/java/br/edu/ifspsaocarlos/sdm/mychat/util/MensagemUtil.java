@@ -3,6 +3,10 @@ package br.edu.ifspsaocarlos.sdm.mychat.util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Mensagem;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.MensagemWS;
@@ -11,6 +15,21 @@ import br.edu.ifspsaocarlos.sdm.mychat.ws.MensagemWS;
  * Created by Andrey Brugnera on 28/06/2017.
  */
 public class MensagemUtil {
+
+    /**
+     * Ordena lista de mensagens por id
+     *
+     * @param mensagens
+     */
+    public static void ordenarPorId(List<Mensagem> mensagens) {
+        Comparator<Mensagem> comparator = new Comparator<Mensagem>() {
+            @Override
+            public int compare(Mensagem o1, Mensagem o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        };
+        Collections.sort(mensagens, comparator);
+    }
 
     /**
      * Converte mensagem em objeto JSON

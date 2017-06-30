@@ -57,7 +57,6 @@ public class MensagemAdapter extends ArrayAdapter<Mensagem> {
 
             TextView tvRemetente = (TextView) convertView.findViewById(R.id.tv_remetente);
             TextView tvMensagem = (TextView) convertView.findViewById(R.id.tv_mensagem);
-            ;
 
             viewHolder = new ViewHolder(tvRemetente, tvMensagem);
             convertView.setTag(viewHolder);
@@ -71,7 +70,6 @@ public class MensagemAdapter extends ArrayAdapter<Mensagem> {
             viewHolder.getTvRemetente().setText(mensagem.getDestino().getNome());
         }
         viewHolder.getTvMensagem().setText(mensagem.getCorpo());
-
         return convertView;
     }
 

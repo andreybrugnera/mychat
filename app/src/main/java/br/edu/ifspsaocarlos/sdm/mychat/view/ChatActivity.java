@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
@@ -64,7 +65,20 @@ public class ChatActivity extends Activity {
      */
     private void carregarMensagensGravadas() {
         mensagemDao = new MensagemDAO(this);
-        this.listaMensagens = mensagemDao.buscarMensagensEnviadasERecebidas(perfil, destinatario);
+
+        this.listaMensagens = new ArrayList<>();
+
+        Log.i("APP", "Reading enviadas");
+        List<Mensagem> liistaMensagensEnviadas = mensagemDao.buscarMensagensEnviadas(perfil, destinatario);
+        Log.i("APP", "Reading recebidas");
+        List<Mensagem> liistaMensagensRecebidas = mensagemDao.buscarMensagensRecebidas(perfil, destinatario);
+
+        this.listaMensagens.addAll(liistaMensagensEnviadas);
+        this.listaMensagens.addAll(liistaMensagensRecebidas);
+
+        Log.i("APP", "Sorting");
+        MensagemUtil.ordenarPorId(this.listaMensagens);
+
         atualizarIdUltimaMensagem();
     }
 
@@ -100,6 +114,10 @@ public class ChatActivity extends Activity {
                 try {
                     if (response != null) {
                         mensagem.setId(response.getInt(MensagemWS.ID));
+                        mensagem.setAssunto(response.getString(MensagemWS.ASSUNTO));
+                        mensagem.setAssunto(response.getString(MensagemWS.CORPO));
+                        mensagem.setIdOrigem(response.getInt(MensagemWS.ORIGEM_ID));
+                        mensagem.setIdDestino(response.getInt(MensagemWS.DESTINO_ID));
                         listaMensagens.add(mensagem);
                         //Insere mensagem no banco
                         mensagemDao.salvarMensagem(mensagem);

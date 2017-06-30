@@ -53,8 +53,8 @@ public class MensagemDAO {
                 mensagem.setIdDestino(cursor.getInt(2));
                 mensagem.setCorpo(cursor.getString(3));
                 mensagem.setAssunto(cursor.getString(4));
-                mensagem.setOrigem(perfil);
-                mensagem.setDestino(remetente);
+                mensagem.setOrigem(remetente);
+                mensagem.setDestino(perfil);
 
                 listaMensagens.add(mensagem);
                 cursor.moveToNext();
@@ -74,56 +74,11 @@ public class MensagemDAO {
      * para o destinatário ordenadas por id
      */
     public List<Mensagem> buscarMensagensEnviadas(Contato perfil, Contato destinatario) {
-        return buscarMensagensEnviadas(destinatario, perfil);
-    }
-
-    /**
-     * Busca todas as mensagens enviadas
-     * ou recebidas do perfil para o contato e vice versa
-     *
-     * @param perfil
-     * @param contato
-     * @return lista de mensagens ordenadas pelo id
-     */
-    public List<Mensagem> buscarMensagensEnviadasERecebidas(Contato perfil, Contato contato) {
-        database = dbHelper.getReadableDatabase();
-        Cursor cursor;
-        List<Mensagem> listaMensagens = new ArrayList<>();
-
-        String[] cols = new String[]{SQLiteHelper.MSG_ID, SQLiteHelper.MSG_ID_ORIGEM,
-                SQLiteHelper.MSG_ID_DESTINO, SQLiteHelper.MSG_CORPO,
-                SQLiteHelper.MSG_ASSUNTO};
-
-        String where = SQLiteHelper.MSG_ID_DESTINO + " = ? AND " + SQLiteHelper.MSG_ID_ORIGEM + " = ? ";
-        where += " OR " + SQLiteHelper.MSG_ID_DESTINO + " = ? AND " + SQLiteHelper.MSG_ID_ORIGEM + " = ? ";
-        String[] argWhere = new String[]{String.valueOf(perfil.getId()), String.valueOf(contato.getId()), String.valueOf(contato.getId()), String.valueOf(perfil.getId())};
-
-        cursor = database.query(SQLiteHelper.MENSAGENS_TABLE, cols, where, argWhere,
-                null, null, SQLiteHelper.MSG_ID);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Mensagem mensagem = new Mensagem();
-                mensagem.setId(cursor.getInt(0));
-                mensagem.setIdOrigem(cursor.getInt(1));
-                mensagem.setIdDestino(cursor.getInt(2));
-                mensagem.setCorpo(cursor.getString(3));
-                mensagem.setAssunto(cursor.getString(4));
-
-                if (mensagem.getIdOrigem() == perfil.getId()) {
-                    mensagem.setOrigem(perfil);
-                    mensagem.setDestino(contato);
-                } else {
-                    mensagem.setOrigem(contato);
-                    mensagem.setDestino(perfil);
-                }
-
-                listaMensagens.add(mensagem);
-                cursor.moveToNext();
-            }
-            cursor.close();
+        List<Mensagem> listaMensagens = buscarMensagensRecebidas(destinatario, perfil);
+        for (Mensagem mensagem : listaMensagens) {
+            mensagem.setOrigem(perfil);
+            mensagem.setDestino(destinatario);
         }
-        database.close();
         return listaMensagens;
     }
 
@@ -131,10 +86,10 @@ public class MensagemDAO {
         database = dbHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteHelper.MSG_ID, mensagem.getId());
-        values.put(SQLiteHelper.MSG_CORPO, mensagem.getCorpo());
-        values.put(SQLiteHelper.MSG_ASSUNTO, mensagem.getAssunto());
         values.put(SQLiteHelper.MSG_ID_ORIGEM, mensagem.getIdOrigem());
         values.put(SQLiteHelper.MSG_ID_DESTINO, mensagem.getIdDestino());
+        values.put(SQLiteHelper.MSG_CORPO, mensagem.getCorpo());
+        values.put(SQLiteHelper.MSG_ASSUNTO, mensagem.getAssunto());
         database.insert(SQLiteHelper.MENSAGENS_TABLE, null, values);
         database.close();
     }
