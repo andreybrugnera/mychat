@@ -32,6 +32,15 @@ import br.edu.ifspsaocarlos.sdm.mychat.util.MensagemUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.view.adapter.MensagemAdapter;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.MensagemWS;
 
+/**
+ * 1 - Serão carregadas as mensagens enviadas/recebidas
+ * no banco de dados SQLite.
+ * 2 - Serão requisitadas as novas mensagens do WS
+ * com id maior que o maior id armazenado no banco de dados.
+ * 3 - Novas mensagens serão armazenadas no banco interno.
+ * 4 - Uma thread será iniciada para verificar novas mensagens
+ * a cada TEMPO_ATUALIZACAO em milisegundos
+ */
 public class ChatActivity extends Activity {
     private Contato perfil;
     private Contato destinatario;
@@ -42,7 +51,7 @@ public class ChatActivity extends Activity {
     private Integer idUltimaMensagem = -1;
     private MensagemDAO mensagemDao;
 
-    private static final int TEMPO_ATUALIZACAO = 5000;
+    private static final int TEMPO_ATUALIZACAO = 2000;
     private AtualizaMensagensThread threadAtualizacao;
     private Timer timer;
 
@@ -59,12 +68,12 @@ public class ChatActivity extends Activity {
 
         setTitle(getString(R.string.chat_com) + " " + destinatario.getNome());
 
-        //Carrega as mensagens armazenadas no banco interno
+        //Carrega as mensagens armazenadas no banco SQLite interno
         carregarMensagensGravadas();
         //Carrega novas mensagens do WS
         carregarMensagensWS();
 
-        mensagemAdapter = new MensagemAdapter(this, R.layout.mensagem_recebida_layout, listaMensagens, perfil);
+        mensagemAdapter = new MensagemAdapter(this, R.layout.mensagem_layout, listaMensagens);
         listView.setAdapter(mensagemAdapter);
 
         iniciarThreadAtualizacao();
@@ -85,8 +94,8 @@ public class ChatActivity extends Activity {
 
         this.listaMensagens = new ArrayList<>();
 
-        List<Mensagem> liistaMensagensEnviadas = mensagemDao.buscarMensagensEnviadas(perfil, destinatario);
-        List<Mensagem> liistaMensagensRecebidas = mensagemDao.buscarMensagensRecebidas(perfil, destinatario);
+        List<Mensagem> liistaMensagensEnviadas = mensagemDao.buscarMensagens(perfil, destinatario);
+        List<Mensagem> liistaMensagensRecebidas = mensagemDao.buscarMensagens(destinatario, perfil);
 
         this.listaMensagens.addAll(liistaMensagensEnviadas);
         this.listaMensagens.addAll(liistaMensagensRecebidas);
@@ -154,6 +163,7 @@ public class ChatActivity extends Activity {
                         //Atualiza lista
                         MensagemUtil.ordenarPorId(listaMensagens);
                         mensagemAdapter.notifyDataSetChanged();
+                        moverParaUltimaMensagem();
                         atualizarIdUltimaMensagem();
                     }
                 } catch (JSONException ex) {
@@ -179,6 +189,7 @@ public class ChatActivity extends Activity {
                         mensagemDao.salvarMensagem(mensagem);
                         //Atualiza lista
                         mensagemAdapter.notifyDataSetChanged();
+                        moverParaUltimaMensagem();
                         etMensagem.setText("");
                     }
                 } catch (JSONException ex) {
@@ -195,6 +206,19 @@ public class ChatActivity extends Activity {
                 Toast.makeText(ChatActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    /**
+     * Move para último elemento
+     * da lista de mensagens
+     */
+    private void moverParaUltimaMensagem() {
+        listView.post(new Runnable() {
+            @Override
+            public void run() {
+                listView.setSelection(mensagemAdapter.getCount() - 1);
+            }
+        });
     }
 
     private class AtualizaMensagensThread extends TimerTask {

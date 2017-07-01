@@ -62,6 +62,7 @@ public class ListaContatosActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_editar:
+                editarPerfil();
                 break;
             case R.id.menu_remover:
                 removerContatosSelecionados();
@@ -98,6 +99,12 @@ public class ListaContatosActivity extends ListActivity {
                 }
             }
         };
+    }
+
+    private void editarPerfil() {
+        Intent intent = new Intent(ListaContatosActivity.this, EditarPerfilActivity.class);
+        intent.putExtra("perfil", perfil);
+        startActivity(intent);
     }
 
     private void removerContatosSelecionados() {

@@ -23,14 +23,14 @@ public class MensagemDAO {
     }
 
     /**
-     * Busca todas as mensagens recebidas
+     * Busca todas as mensagens
      *
-     * @param perfil
      * @param remetente
-     * @return lista com todas as mensagens recebidas
+     * @param destinatario
+     * @return lista com todas as mensagens
      * ordenadas por id
      */
-    public List<Mensagem> buscarMensagensRecebidas(Contato perfil, Contato remetente) {
+    public List<Mensagem> buscarMensagens(Contato remetente, Contato destinatario) {
         database = dbHelper.getReadableDatabase();
         Cursor cursor;
         List<Mensagem> listaMensagens = new ArrayList<>();
@@ -40,7 +40,7 @@ public class MensagemDAO {
                 SQLiteHelper.MSG_ASSUNTO};
 
         String where = SQLiteHelper.MSG_ID_DESTINO + " = ? AND " + SQLiteHelper.MSG_ID_ORIGEM + " = ? ";
-        String[] argWhere = new String[]{String.valueOf(perfil.getId()), String.valueOf(remetente.getId())};
+        String[] argWhere = new String[]{String.valueOf(destinatario.getId()), String.valueOf(remetente.getId())};
 
         cursor = database.query(SQLiteHelper.MENSAGENS_TABLE, cols, where, argWhere,
                 null, null, SQLiteHelper.MSG_ID);
@@ -54,7 +54,7 @@ public class MensagemDAO {
                 mensagem.setCorpo(cursor.getString(3));
                 mensagem.setAssunto(cursor.getString(4));
                 mensagem.setOrigem(remetente);
-                mensagem.setDestino(perfil);
+                mensagem.setDestino(destinatario);
 
                 listaMensagens.add(mensagem);
                 cursor.moveToNext();
@@ -66,22 +66,10 @@ public class MensagemDAO {
     }
 
     /**
-     * Busca todas as mensagens enviadas
+     * Persiste mensagem
      *
-     * @param perfil
-     * @param destinatario
-     * @return lista com todas as mensagens enviadas
-     * para o destinatário ordenadas por id
+     * @param mensagem
      */
-    public List<Mensagem> buscarMensagensEnviadas(Contato perfil, Contato destinatario) {
-        List<Mensagem> listaMensagens = buscarMensagensRecebidas(destinatario, perfil);
-        for (Mensagem mensagem : listaMensagens) {
-            mensagem.setOrigem(perfil);
-            mensagem.setDestino(destinatario);
-        }
-        return listaMensagens;
-    }
-
     public void salvarMensagem(Mensagem mensagem) {
         database = dbHelper.getReadableDatabase();
         ContentValues values = new ContentValues();

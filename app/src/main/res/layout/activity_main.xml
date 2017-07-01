@@ -35,7 +35,7 @@
         android:textSize="20sp"
         android:visibility="gone"
         android:background="#C0DB67"
-        android:onClick="criarPerfil" />
+        android:onClick="salvarPerfil" />
 
     <Button
         android:id="@+id/bt_entrar"

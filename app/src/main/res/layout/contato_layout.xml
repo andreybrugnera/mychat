@@ -18,7 +18,7 @@
             android:paddingRight="2dp" />
 
         <TextView
-            android:id="@+id/nome"
+            android:id="@+id/et_nome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="3dp"
@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/apelido"
+        android:id="@+id/et_apelido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"

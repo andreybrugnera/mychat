@@ -1,11 +1,11 @@
 package br.edu.ifspsaocarlos.sdm.mychat.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,33 +24,40 @@ import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
 
-public class CriarPerfilActivity extends Activity {
+public class EditarPerfilActivity extends Activity {
+    private TextView tvTitulo;
     private EditText editNome;
     private EditText editApelido;
     private PerfilDAO perfilDao;
+    private Contato perfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_perfil);
-        setTitle(getString(R.string.novo_contato));
+        setTitle(R.string.editar);
 
+        perfil = (Contato) getIntent().getSerializableExtra("perfil");
+
+        tvTitulo = (TextView) findViewById(R.id.tv_titulo);
+        tvTitulo.setText(R.string.editar);
         editNome = (EditText) findViewById(R.id.et_nome);
+        editNome.setText(perfil.getNome());
         editApelido = (EditText) findViewById(R.id.et_apelido);
+        editApelido.setText(perfil.getApelido());
 
         perfilDao = new PerfilDAO(this);
     }
 
     public void salvarPerfil(View v) {
-        Contato usuario = new Contato();
-        usuario.setNome(String.valueOf(editNome.getText()));
-        usuario.setApelido(String.valueOf(editApelido.getText()));
+        perfil.setNome(String.valueOf(editNome.getText()));
+        perfil.setApelido(String.valueOf(editApelido.getText()));
 
         JSONObject contatoJSON;
         try {
-            contatoJSON = ContatoUtil.converterParaJSON(usuario);
+            contatoJSON = ContatoUtil.converterParaJSON(perfil);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            Response.Listener<JSONObject> responseListener = criarPerfilResponseListener(usuario);
+            Response.Listener<JSONObject> responseListener = atualizarPerfilResponseListener(perfil);
             Response.ErrorListener errorListener = criarErrorResponseListener();
             JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, ContatoWS.WS_CONTATO, contatoJSON, responseListener, errorListener);
             requestQueue.add(jsonRequest);
@@ -59,19 +66,19 @@ public class CriarPerfilActivity extends Activity {
         }
     }
 
-    private Response.Listener<JSONObject> criarPerfilResponseListener(final Contato contato) {
+    private Response.Listener<JSONObject> atualizarPerfilResponseListener(final Contato perfil) {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     if (response != null) {
-                        contato.setId(response.getInt(ContatoWS.ID));
-                        contato.setNome(response.getString(ContatoWS.NOME));
-                        contato.setApelido(response.getString(ContatoWS.APELIDO));
-                        salvarPerfil(contato);
+                        perfil.setId(response.getInt(ContatoWS.ID));
+                        perfil.setNome(response.getString(ContatoWS.NOME));
+                        perfil.setApelido(response.getString(ContatoWS.APELIDO));
+                        atualizarPerfil(perfil);
                     }
                 } catch (JSONException ex) {
-                    Log.e(getString(R.string.app_name), "Erro ao tentar criar o perfil");
+                    Log.e(getString(R.string.app_name), "Erro ao tentar editar o perfil");
                 }
             }
         };
@@ -81,22 +88,14 @@ public class CriarPerfilActivity extends Activity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(CriarPerfilActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
+                Toast.makeText(EditarPerfilActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
     }
 
-    private void salvarPerfil(Contato contato) {
-        perfilDao.criarPerfil(contato);
-        Toast.makeText(CriarPerfilActivity.this, getString(R.string.perfil_criado), Toast.LENGTH_LONG).show();
-        abrirListaDeContatos(contato);
-    }
-
-    private void abrirListaDeContatos(Contato contato) {
-        Intent intent = new Intent(CriarPerfilActivity.this, ListaContatosActivity.class);
-        intent.putExtra("perfil", contato);
-        startActivity(intent);
-        //Remove essa activity da pilha
+    private void atualizarPerfil(Contato perfil) {
+        perfilDao.atualizarPerfil(perfil);
+        Toast.makeText(EditarPerfilActivity.this, getString(R.string.perfil_atualizado), Toast.LENGTH_LONG).show();
         finish();
     }
 }

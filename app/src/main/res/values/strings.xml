@@ -19,6 +19,7 @@
     <string name="entrar">Entrar</string>
     <string name="sair">Sair</string>
     <string name="perfil_criado">Perfil criado</string>
+    <string name="perfil_atualizado">Perfil atualizado</string>
     <string name="chat_com">Chat com</string>
     <string name="enviar">Enviar</string>
     <string name="mensagem">Mensagem...</string>

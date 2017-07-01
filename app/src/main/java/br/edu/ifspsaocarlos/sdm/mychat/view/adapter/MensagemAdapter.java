@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
-import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Mensagem;
 
 /**
@@ -19,13 +18,11 @@ import br.edu.ifspsaocarlos.sdm.mychat.model.Mensagem;
 public class MensagemAdapter extends ArrayAdapter<Mensagem> {
     private List<Mensagem> listaMensagens;
     private Context context;
-    private Contato perfil;
 
-    public MensagemAdapter(Context context, int resource, List<Mensagem> objects, Contato perfil) {
+    public MensagemAdapter(Context context, int resource, List<Mensagem> objects) {
         super(context, resource, objects);
         this.listaMensagens = objects;
         this.context = context;
-        this.perfil = perfil;
     }
 
     @Override
@@ -49,11 +46,7 @@ public class MensagemAdapter extends ArrayAdapter<Mensagem> {
         Mensagem mensagem = listaMensagens.get(position);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (mensagem.getOrigem().equals(perfil)) {
-                convertView = inflater.inflate(R.layout.mensagem_enviada_layout, null);
-            } else {
-                convertView = inflater.inflate(R.layout.mensagem_recebida_layout, null);
-            }
+            convertView = inflater.inflate(R.layout.mensagem_layout, null);
 
             TextView tvRemetente = (TextView) convertView.findViewById(R.id.tv_remetente);
             TextView tvMensagem = (TextView) convertView.findViewById(R.id.tv_mensagem);
@@ -64,11 +57,7 @@ public class MensagemAdapter extends ArrayAdapter<Mensagem> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if (mensagem.getOrigem().equals(perfil)) {
-            viewHolder.getTvRemetente().setText(mensagem.getOrigem().getNome());
-        } else {
-            viewHolder.getTvRemetente().setText(mensagem.getDestino().getNome());
-        }
+        viewHolder.getTvRemetente().setText(mensagem.getOrigem().getNome());
         viewHolder.getTvMensagem().setText(mensagem.getCorpo());
         return convertView;
     }

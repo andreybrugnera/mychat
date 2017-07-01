@@ -50,8 +50,8 @@ public class ContatoAdapter extends ArrayAdapter<Contato> {
             convertView = inflater.inflate(R.layout.contato_layout, null);
 
             CheckBox chkSelecionado = (CheckBox) convertView.findViewById(R.id.cb_selecionado);
-            TextView txtNome = (TextView) convertView.findViewById(R.id.nome);
-            TextView txtApelido = (TextView) convertView.findViewById(R.id.apelido);
+            TextView txtNome = (TextView) convertView.findViewById(R.id.et_nome);
+            TextView txtApelido = (TextView) convertView.findViewById(R.id.et_apelido);
 
             viewHolder = new ViewHolder(txtNome, txtApelido, chkSelecionado);
             convertView.setTag(viewHolder);
