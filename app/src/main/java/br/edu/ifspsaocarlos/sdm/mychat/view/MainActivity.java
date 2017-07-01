@@ -30,6 +30,10 @@ public class MainActivity extends Activity {
         btEntrar = (Button) findViewById(R.id.bt_entrar);
         btCriarPerfil = (Button) findViewById(R.id.bt_criar_perfil);
 
+        atualizarStatusDosComandos();
+    }
+
+    private void atualizarStatusDosComandos() {
         btEntrar.setVisibility(perfilCriado() ? View.VISIBLE : View.GONE);
         btCriarPerfil.setVisibility(perfilCriado() ? View.GONE : View.VISIBLE);
     }
@@ -52,5 +56,11 @@ public class MainActivity extends Activity {
 
     public void sair(View v) {
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        atualizarStatusDosComandos();
     }
 }

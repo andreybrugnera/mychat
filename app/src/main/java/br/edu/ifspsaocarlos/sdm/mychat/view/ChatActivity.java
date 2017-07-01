@@ -15,11 +15,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
 import br.edu.ifspsaocarlos.sdm.mychat.dao.MensagemDAO;
@@ -36,9 +39,12 @@ public class ChatActivity extends Activity {
     private ListView listView;
     private MensagemAdapter mensagemAdapter;
     private EditText etMensagem;
-    private Integer idUltimaMensagem = 0;
-
+    private Integer idUltimaMensagem = -1;
     private MensagemDAO mensagemDao;
+
+    private static final int TEMPO_ATUALIZACAO = 5000;
+    private AtualizaMensagensThread threadAtualizacao;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +59,21 @@ public class ChatActivity extends Activity {
 
         setTitle(getString(R.string.chat_com) + " " + destinatario.getNome());
 
+        //Carrega as mensagens armazenadas no banco interno
         carregarMensagensGravadas();
+        //Carrega novas mensagens do WS
+        carregarMensagensWS();
 
         mensagemAdapter = new MensagemAdapter(this, R.layout.mensagem_recebida_layout, listaMensagens, perfil);
         listView.setAdapter(mensagemAdapter);
+
+        iniciarThreadAtualizacao();
+    }
+
+    private void iniciarThreadAtualizacao() {
+        timer = new Timer();
+        threadAtualizacao = new AtualizaMensagensThread();
+        timer.scheduleAtFixedRate(threadAtualizacao, TEMPO_ATUALIZACAO, TEMPO_ATUALIZACAO);
     }
 
     /**
@@ -68,18 +85,29 @@ public class ChatActivity extends Activity {
 
         this.listaMensagens = new ArrayList<>();
 
-        Log.i("APP", "Reading enviadas");
         List<Mensagem> liistaMensagensEnviadas = mensagemDao.buscarMensagensEnviadas(perfil, destinatario);
-        Log.i("APP", "Reading recebidas");
         List<Mensagem> liistaMensagensRecebidas = mensagemDao.buscarMensagensRecebidas(perfil, destinatario);
 
         this.listaMensagens.addAll(liistaMensagensEnviadas);
         this.listaMensagens.addAll(liistaMensagensRecebidas);
+    }
 
-        Log.i("APP", "Sorting");
-        MensagemUtil.ordenarPorId(this.listaMensagens);
-
+    private void carregarMensagensWS() {
+        //Carrega novas mensagens do WS
+        Log.i(getString(R.string.app_name), "Buscando mensagens enviadas");
+        carregarMensagensWS(perfil, destinatario);
+        Log.i(getString(R.string.app_name), "Buscando mensagens recebidas");
+        carregarMensagensWS(destinatario, perfil);
         atualizarIdUltimaMensagem();
+    }
+
+    private void carregarMensagensWS(Contato contato1, Contato contato2) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        Response.Listener<JSONObject> responseListener = lerMensagensResponseListener();
+        Response.ErrorListener errorListener = criarErrorResponseListener();
+        String URL = MensagemWS.WS_MENSAGEM + "/" + idUltimaMensagem + "/" + contato1.getId() + "/" + contato2.getId();
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, URL, null, responseListener, errorListener);
+        requestQueue.add(jsonRequest);
     }
 
     private void atualizarIdUltimaMensagem() {
@@ -87,6 +115,7 @@ public class ChatActivity extends Activity {
         if (!listaMensagens.isEmpty()) {
             this.idUltimaMensagem = listaMensagens.get(listaMensagens.size() - 1).getId();
         }
+        Log.i(getString(R.string.app_name), "Maior id de mensagem recebida: " + idUltimaMensagem);
     }
 
     public void enviarMensagem(View v) {
@@ -100,11 +129,38 @@ public class ChatActivity extends Activity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             Response.Listener<JSONObject> responseListener = criarMensagemResponseListener(mensagem);
             Response.ErrorListener errorListener = criarErrorResponseListener();
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, MensagemWS.WS_ADICIONAR_MENSAGEM, mensagemJSON, responseListener, errorListener);
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, MensagemWS.WS_MENSAGEM, mensagemJSON, responseListener, errorListener);
             requestQueue.add(jsonRequest);
         } catch (JSONException ex) {
             Log.e(getString(R.string.app_name), "Erro ao converter a mensagem em JSON");
         }
+    }
+
+    private Response.Listener<JSONObject> lerMensagensResponseListener() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response != null) {
+                        JSONArray mensagens = response.getJSONArray(MensagemWS.MENSAGENS);
+                        for (int i = 0; i < mensagens.length(); i++) {
+                            JSONObject jsonObject = mensagens.getJSONObject(i);
+                            Mensagem mensagem = MensagemUtil.converterParaMensagem(jsonObject);
+                            if (mensagem.getId() > idUltimaMensagem) {
+                                listaMensagens.add(mensagem);
+                                mensagemDao.salvarMensagem(mensagem);
+                            }
+                        }
+                        //Atualiza lista
+                        MensagemUtil.ordenarPorId(listaMensagens);
+                        mensagemAdapter.notifyDataSetChanged();
+                        atualizarIdUltimaMensagem();
+                    }
+                } catch (JSONException ex) {
+                    Log.e(getString(R.string.app_name), "Erro ao receber as mensagens");
+                }
+            }
+        };
     }
 
     private Response.Listener<JSONObject> criarMensagemResponseListener(final Mensagem mensagem) {
@@ -123,6 +179,7 @@ public class ChatActivity extends Activity {
                         mensagemDao.salvarMensagem(mensagem);
                         //Atualiza lista
                         mensagemAdapter.notifyDataSetChanged();
+                        etMensagem.setText("");
                     }
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao tentar enviar a mensagem");
@@ -138,5 +195,19 @@ public class ChatActivity extends Activity {
                 Toast.makeText(ChatActivity.this, getString(R.string.erro_executar_operacao), Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    private class AtualizaMensagensThread extends TimerTask {
+        @Override
+        public void run() {
+            carregarMensagensWS();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        timer.purge();
     }
 }

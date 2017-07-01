@@ -89,11 +89,14 @@ public class CriarPerfilActivity extends Activity {
     private void criarPerfil(Contato contato) {
         perfilDao.criarPerfil(contato);
         Toast.makeText(CriarPerfilActivity.this, getString(R.string.perfil_criado), Toast.LENGTH_LONG).show();
-        abrirListaDeContatos();
+        abrirListaDeContatos(contato);
     }
 
-    private void abrirListaDeContatos() {
+    private void abrirListaDeContatos(Contato contato) {
         Intent intent = new Intent(CriarPerfilActivity.this, ListaContatosActivity.class);
+        intent.putExtra("perfil", contato);
         startActivity(intent);
+        //Remove essa activity da pilha
+        finish();
     }
 }

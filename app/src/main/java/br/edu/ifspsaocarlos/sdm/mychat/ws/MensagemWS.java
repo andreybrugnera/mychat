@@ -7,7 +7,6 @@ package br.edu.ifspsaocarlos.sdm.mychat.ws;
 public abstract class MensagemWS extends WebServiceUtil {
 
     public static final String WS_MENSAGEM = SERVICE_URL + "/mensagem";
-    public static final String WS_ADICIONAR_MENSAGEM = WS_MENSAGEM + "/add";
 
     public static final String ID = "id";
     public static final String ORIGEM_ID = "origem_id";
@@ -16,5 +15,6 @@ public abstract class MensagemWS extends WebServiceUtil {
     public static final String CORPO = "corpo";
     public static final String ORIGEM = "origem";
     public static final String DESTINO = "destino";
+    public static final String MENSAGENS = "mensagens";
 
 }

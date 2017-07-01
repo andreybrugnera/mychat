@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,7 +35,6 @@ import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
 public class ListaContatosActivity extends ListActivity {
     private List<Contato> listaContatos = new ArrayList<>();
     private ContatoAdapter contatoAdapter;
-    private ProgressBar barraProgresso;
     private Contato perfil;
 
     @Override
@@ -47,7 +45,6 @@ public class ListaContatosActivity extends ListActivity {
         perfil = (Contato) getIntent().getSerializableExtra("perfil");
         setTitle(getString(R.string.contatos_de) + " " + perfil.getNome());
 
-        barraProgresso = (ProgressBar) findViewById(R.id.progress_bar);
         contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatos);
 
         carregarContatos();
@@ -77,8 +74,6 @@ public class ListaContatosActivity extends ListActivity {
     }
 
     private void carregarContatos() {
-        barraProgresso.setVisibility(View.VISIBLE);
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         Response.Listener<JSONObject> responseListener = recuperarContatosResponseListener(listaContatos);
         Response.ErrorListener errorListener = criarErrorResponseListener();
@@ -91,14 +86,13 @@ public class ListaContatosActivity extends ListActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONArray contatos = response.getJSONArray(br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS.CONTATOS);
+                    JSONArray contatos = response.getJSONArray(ContatoWS.CONTATOS);
                     for (int i = 0; i < contatos.length(); i++) {
                         Contato contato = ContatoUtil.converterParaContato(contatos.getJSONObject(i));
                         listaContatos.add(contato);
                     }
                     ContatoUtil.ordenarPorNome(listaContatos);
                     contatoAdapter.notifyDataSetChanged();
-                    barraProgresso.setVisibility(View.GONE);
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao tentar recuperar os contatos");
                 }
@@ -136,13 +130,11 @@ public class ListaContatosActivity extends ListActivity {
     }
 
     private void removerContato(Contato contato) {
-        barraProgresso.setVisibility(View.VISIBLE);
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         Response.Listener<JSONObject> responseListener = removerContatoResponseListener(contato);
         Response.ErrorListener errorListener = criarErrorResponseListener();
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.DELETE, ContatoWS.WS_EXCLUIR_CONTATO + "/" + contato.getId(), null, responseListener, errorListener);
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.DELETE, ContatoWS.WS_CONTATO + "/" + contato.getId(), null, responseListener, errorListener);
         requestQueue.add(jsonRequest);
     }
 
@@ -155,7 +147,6 @@ public class ListaContatosActivity extends ListActivity {
                         contato.setId(response.getInt(ContatoWS.ID));
                         listaContatos.remove(contato);
                         contatoAdapter.notifyDataSetChanged();
-                        barraProgresso.setVisibility(View.GONE);
                     }
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao excluir o contato");
