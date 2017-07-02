@@ -5,6 +5,10 @@
         android:showAsAction="never"
         android:title="@string/editar" />
     <item
+        android:id="@+id/menu_pesquisar"
+        android:showAsAction="never"
+        android:title="@string/pesquisar" />
+    <item
         android:id="@+id/menu_remover"
         android:showAsAction="never"
         android:title="@string/remover" />

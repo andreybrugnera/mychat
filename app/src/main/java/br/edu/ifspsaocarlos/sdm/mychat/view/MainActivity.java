@@ -45,7 +45,6 @@ public class MainActivity extends Activity {
 
     public void entrar(View v) {
         Intent intent = new Intent(MainActivity.this, ListaContatosActivity.class);
-        intent.putExtra("perfil", perfil);
         startActivity(intent);
     }
 

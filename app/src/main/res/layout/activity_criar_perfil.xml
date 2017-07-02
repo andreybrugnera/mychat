@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/background_dark"
     tools:context="br.edu.ifspsaocarlos.sdm.mychat.view.CriarPerfilActivity">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/criar_perfil"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:layout_marginTop="15sp"
         android:layout_marginBottom="15sp"
@@ -21,12 +23,14 @@
         android:id="@+id/et_nome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:hint="@string/informe_nome" />
 
     <EditText
         android:id="@+id/et_apelido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:layout_marginTop="15sp"
         android:hint="@string/informe_apelido" />
 
@@ -36,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15sp"
+        android:background="#C0DB67"
         android:onClick="salvarPerfil"
         android:text="@string/salvar" />
 

@@ -2,6 +2,7 @@ package br.edu.ifspsaocarlos.sdm.mychat.view;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.view.adapter.ContatoAdapter;
@@ -36,20 +38,22 @@ public class ListaContatosActivity extends ListActivity {
     private List<Contato> listaContatos = new ArrayList<>();
     private ContatoAdapter contatoAdapter;
     private Contato perfil;
+    private PerfilDAO perfilDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_contatos);
 
-        perfil = (Contato) getIntent().getSerializableExtra("perfil");
-        setTitle(getString(R.string.contatos_de) + " " + perfil.getNome());
+        perfilDao = new PerfilDAO(this);
 
-        contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatos);
+        perfil = perfilDao.buscaPerfil();
+        setTitle(getString(R.string.contatos_de) + " " + perfil.getNome());
 
         carregarContatos();
 
-        setListAdapter(contatoAdapter);
+        //Menu de contexto
+        registerForContextMenu(getListView());
     }
 
     @Override
@@ -63,6 +67,9 @@ public class ListaContatosActivity extends ListActivity {
         switch (item.getItemId()) {
             case R.id.menu_editar:
                 editarPerfil();
+                break;
+            case R.id.menu_pesquisar:
+                onSearchRequested();
                 break;
             case R.id.menu_remover:
                 removerContatosSelecionados();
@@ -93,6 +100,7 @@ public class ListaContatosActivity extends ListActivity {
                         listaContatos.add(contato);
                     }
                     ContatoUtil.ordenarPorNome(listaContatos);
+                    configurarListAdapter();
                     contatoAdapter.notifyDataSetChanged();
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao tentar recuperar os contatos");
@@ -184,5 +192,31 @@ public class ListaContatosActivity extends ListActivity {
         intent.putExtra("perfil", perfil);
         intent.putExtra("destinatario", destinatario);
         startActivity(intent);
+    }
+
+    /**
+     * Configura adapter de acordo com a ação
+     * da activity, que pode ser de busca (carrega apenas os nomes procurados)
+     * ou carrega todos os contatos
+     */
+    private void configurarListAdapter() {
+        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEARCH)) {
+            //abriu essa activiy para buscar um contato por nome
+            String nomeBuscado = getIntent().getStringExtra(SearchManager.QUERY);
+            List<Contato> listaContatosEncontrados = null;
+            for (Contato c : listaContatos) {
+                if (c.getNome().equalsIgnoreCase(nomeBuscado)) {
+                    if (listaContatosEncontrados == null) {
+                        listaContatosEncontrados = new ArrayList();
+                    }
+                    listaContatosEncontrados.add(c);
+                }
+            }
+            contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatosEncontrados);
+        } else {
+            contatoAdapter = new ContatoAdapter(this, R.layout.contato_layout, listaContatos);
+        }
+
+        setListAdapter(contatoAdapter);
     }
 }

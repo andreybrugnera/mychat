@@ -5,6 +5,7 @@
     <string name="erro_executar_operacao">Erro ao executar a operação</string>
     <string name="title_activity_lista_contatos">ListaContatosActivity</string>
     <string name="novo">Novo</string>
+    <string name="pesquisar">Pesquisar</string>
     <string name="editar">Editar perfil</string>
     <string name="remover">Remover</string>
     <string name="deseja_remover_contatos">Deseja realmente remover os contato(s) comboBoxSelecionado(s)?</string>
