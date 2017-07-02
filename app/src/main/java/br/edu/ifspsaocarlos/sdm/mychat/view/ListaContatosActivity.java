@@ -205,7 +205,9 @@ public class ListaContatosActivity extends ListActivity {
             String nomeBuscado = getIntent().getStringExtra(SearchManager.QUERY);
             List<Contato> listaContatosEncontrados = null;
             for (Contato c : listaContatos) {
-                if (c.getNome().equalsIgnoreCase(nomeBuscado)) {
+                boolean contemParteDoNome = c.getNome() != null && c.getNome().toUpperCase().contains(nomeBuscado.toUpperCase());
+                boolean contemParteDoApelido = c.getApelido() != null && c.getApelido().toUpperCase().contains(nomeBuscado.toUpperCase());
+                if (contemParteDoApelido || contemParteDoNome) {
                     if (listaContatosEncontrados == null) {
                         listaContatosEncontrados = new ArrayList();
                     }

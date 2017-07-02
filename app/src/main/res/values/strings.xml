@@ -14,6 +14,8 @@
     <string name="nao">Não</string>
     <string name="informe_nome">Informe o nome</string>
     <string name="informe_apelido">Informe o apelido</string>
+    <string name="label_nome">Nome</string>
+    <string name="label_apelido">Apelido</string>
     <string name="novo_contato">Novo contato</string>
     <string name="salvar">Salvar</string>
     <string name="criar_perfil">Criar perfil</string>

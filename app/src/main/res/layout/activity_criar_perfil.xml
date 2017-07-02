@@ -19,6 +19,16 @@
         android:layout_gravity="center_horizontal"
         android:textStyle="italic|bold" />
 
+    <TextView
+        android:id="@+id/tv_nome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_nome"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="italic|bold"
+        android:layout_marginStart="12dp" />
+
     <EditText
         android:id="@+id/et_nome"
         android:layout_width="match_parent"
@@ -26,12 +36,22 @@
         android:textColor="@android:color/white"
         android:hint="@string/informe_nome" />
 
+    <TextView
+        android:id="@+id/tv_apelido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_apelido"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="italic|bold"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="15sp" />
+
     <EditText
         android:id="@+id/et_apelido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:layout_marginTop="15sp"
         android:hint="@string/informe_apelido" />
 
     <Button
