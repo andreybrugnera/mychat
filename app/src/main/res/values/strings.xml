@@ -24,4 +24,5 @@
     <string name="chat_com">Chat com</string>
     <string name="enviar">Enviar</string>
     <string name="mensagem">Mensagem...</string>
+    <string name="nova_mensagem_de">Nova mensagem de</string>
 </resources>

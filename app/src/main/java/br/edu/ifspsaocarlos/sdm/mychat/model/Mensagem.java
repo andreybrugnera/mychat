@@ -69,5 +69,16 @@ public class Mensagem {
         this.destino = destino;
         this.idDestino = destino.getId();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Mensagem [origem: ").append(origem.getNome());
+        sb.append(", destino: ").append(destino.getNome());
+        sb.append(", corpo: ").append(corpo);
+        sb.append(", assunto: ").append(assunto).append("]");
+        return sb.toString();
+    }
+
 }
 
