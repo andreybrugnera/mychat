@@ -71,6 +71,21 @@ public class Mensagem {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Mensagem mensagem = (Mensagem) o;
+
+        return id != null ? id.equals(mensagem.id) : mensagem.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Mensagem [origem: ").append(origem.getNome());
