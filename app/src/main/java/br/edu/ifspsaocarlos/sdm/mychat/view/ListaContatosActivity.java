@@ -77,9 +77,6 @@ public class ListaContatosActivity extends ListActivity {
             case R.id.menu_editar:
                 editarPerfil();
                 break;
-            case R.id.menu_pesquisar:
-                //onSearchRequested();
-                break;
             case R.id.menu_remover:
                 removerContatosSelecionados();
                 break;
