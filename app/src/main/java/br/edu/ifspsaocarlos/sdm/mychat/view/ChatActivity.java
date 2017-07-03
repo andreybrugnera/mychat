@@ -130,10 +130,14 @@ public class ChatActivity extends Activity {
     }
 
     public void enviarMensagem(View v) {
+        String textoMensagem = String.valueOf(etMensagem.getText());
+        if (textoMensagem == null || textoMensagem.length() == 0) {
+            return;
+        }
         Mensagem mensagem = new Mensagem();
         mensagem.setDestino(destinatario);
         mensagem.setOrigem(perfil);
-        mensagem.setCorpo(String.valueOf(etMensagem.getText()));
+        mensagem.setCorpo(textoMensagem);
         JSONObject mensagemJSON;
         try {
             mensagemJSON = MensagemUtil.converterParaJSON(mensagem);
@@ -186,12 +190,14 @@ public class ChatActivity extends Activity {
                         mensagem.setAssunto(response.getString(MensagemWS.CORPO));
                         mensagem.setIdOrigem(response.getInt(MensagemWS.ORIGEM_ID));
                         mensagem.setIdDestino(response.getInt(MensagemWS.DESTINO_ID));
-                        listaMensagens.add(mensagem);
-                        //Insere mensagem no banco
-                        mensagemDao.salvarMensagem(mensagem);
-                        //Atualiza lista
-                        mensagemAdapter.notifyDataSetChanged();
-                        moverParaUltimaMensagem();
+                        if (!listaMensagens.contains(mensagem)) {
+                            listaMensagens.add(mensagem);
+                            //Insere mensagem no banco
+                            mensagemDao.salvarMensagem(mensagem);
+                            //Atualiza lista
+                            mensagemAdapter.notifyDataSetChanged();
+                            moverParaUltimaMensagem();
+                        }
                         etMensagem.setText("");
                     }
                 } catch (JSONException ex) {
