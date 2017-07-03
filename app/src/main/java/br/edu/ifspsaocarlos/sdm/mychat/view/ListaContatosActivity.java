@@ -54,7 +54,16 @@ public class ListaContatosActivity extends ListActivity {
 
         //Menu de contexto
         registerForContextMenu(getListView());
+
+        //Inicia serviço de busca de mensagens
+        iniciarServicoBuscaMensagens();
     }
+
+    private void iniciarServicoBuscaMensagens() {
+        Intent intentService = new Intent("SERVICE_MENSAGEM");
+        startService(intentService);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
