@@ -112,10 +112,12 @@ public class ChatActivity extends Activity {
 
     private void carregarMensagensWS(Contato contato1, Contato contato2) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         Response.Listener<JSONObject> responseListener = lerMensagensResponseListener();
         Response.ErrorListener errorListener = criarErrorResponseListener();
         String URL = MensagemWS.WS_MENSAGEM + "/" + idUltimaMensagem + "/" + contato1.getId() + "/" + contato2.getId();
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, URL, null, responseListener, errorListener);
+
         requestQueue.add(jsonRequest);
     }
 

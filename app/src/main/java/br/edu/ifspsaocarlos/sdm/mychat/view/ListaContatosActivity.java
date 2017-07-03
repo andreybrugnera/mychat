@@ -3,6 +3,7 @@ package br.edu.ifspsaocarlos.sdm.mychat.view;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -59,6 +61,13 @@ public class ListaContatosActivity extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_contatos, menu);
+
+        // Obtém a referência para a action de busca:
+        SearchView searchView;
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.menu_pesquisar).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -69,7 +78,7 @@ public class ListaContatosActivity extends ListActivity {
                 editarPerfil();
                 break;
             case R.id.menu_pesquisar:
-                onSearchRequested();
+                //onSearchRequested();
                 break;
             case R.id.menu_remover:
                 removerContatosSelecionados();
