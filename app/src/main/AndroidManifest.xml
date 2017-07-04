@@ -33,10 +33,11 @@
         <activity android:name=".view.ChatActivity" />
         <activity android:name=".view.EditarPerfilActivity" />
 
-        <service android:name=".service.VerificarNovasMensagensService">
+        <service
+            android:name=".service.VerificarNovasMensagensService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="SERVICE_MENSAGEM" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>

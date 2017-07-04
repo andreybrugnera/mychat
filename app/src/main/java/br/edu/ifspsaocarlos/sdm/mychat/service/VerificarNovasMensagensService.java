@@ -65,7 +65,8 @@ public class VerificarNovasMensagensService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onCreate() {
+        super.onCreate();
         Log.i(getString(R.string.app_name), "Iniciando serviço de verificação de mensagens");
 
         perfilDao = new PerfilDAO(this);
@@ -79,7 +80,6 @@ public class VerificarNovasMensagensService extends Service {
         timer = new Timer();
         verificarMensagensThread = new VerificarMensagensThread();
         timer.scheduleAtFixedRate(verificarMensagensThread, TEMPO_ATUALIZACAO, TEMPO_ATUALIZACAO);
-        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

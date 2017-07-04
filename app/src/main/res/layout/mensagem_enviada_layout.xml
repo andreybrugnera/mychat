@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5sp"
         android:layout_marginBottom="5sp"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="30sp"
-        android:background="#E0DC67"
+        android:layout_marginTop="5sp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_remetente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="right"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
             android:textColor="@android:color/holo_blue_dark"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="italic|bold" />
 
         <TextView
             android:id="@+id/tv_mensagem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textSize="20sp" />
+            android:layout_gravity="right"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/mensagem_enviada"
+            android:padding="8dp" />
 
     </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
