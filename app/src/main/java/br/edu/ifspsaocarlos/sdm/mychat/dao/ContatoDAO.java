@@ -10,11 +10,11 @@ import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 /**
  * Created by Andrey Brugnera on 26/06/2017.
  */
-public class PerfilDAO {
+public class ContatoDAO {
     private SQLiteDatabase database;
     private SQLiteHelper dbHelper;
 
-    public PerfilDAO(Context context) {
+    public ContatoDAO(Context context) {
         this.dbHelper = new SQLiteHelper(context);
     }
 

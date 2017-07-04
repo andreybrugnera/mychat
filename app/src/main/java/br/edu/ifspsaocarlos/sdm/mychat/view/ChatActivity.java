@@ -82,8 +82,6 @@ public class ChatActivity extends Activity {
         MensagemUtil.ordenarPorId(listaMensagens);
         mensagemAdapter.notifyDataSetChanged();
         moverParaUltimaMensagem();
-        //Carrega novas mensagens do WS
-        //carregarMensagensWS();
 
         iniciarThreadAtualizacao();
     }
@@ -239,7 +237,9 @@ public class ChatActivity extends Activity {
      * da lista de mensagens
      */
     private void moverParaUltimaMensagem() {
-        recyclerView.smoothScrollToPosition(mensagemAdapter.getItemCount() - 1);
+        if (mensagemAdapter.getItemCount() > 0) {
+            recyclerView.smoothScrollToPosition(mensagemAdapter.getItemCount() - 1);
+        }
     }
 
     private class AtualizaMensagensThread extends TimerTask {

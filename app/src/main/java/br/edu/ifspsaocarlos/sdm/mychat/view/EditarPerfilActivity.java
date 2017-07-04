@@ -19,7 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
-import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.ContatoDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
@@ -28,7 +28,7 @@ public class EditarPerfilActivity extends Activity {
     private TextView tvTitulo;
     private EditText editNome;
     private EditText editApelido;
-    private PerfilDAO perfilDao;
+    private ContatoDAO contatoDao;
     private Contato perfil;
 
     @Override
@@ -46,7 +46,7 @@ public class EditarPerfilActivity extends Activity {
         editApelido = (EditText) findViewById(R.id.et_apelido);
         editApelido.setText(perfil.getApelido());
 
-        perfilDao = new PerfilDAO(this);
+        contatoDao = new ContatoDAO(this);
     }
 
     public void salvarPerfil(View v) {
@@ -94,7 +94,7 @@ public class EditarPerfilActivity extends Activity {
     }
 
     private void atualizarPerfil(Contato perfil) {
-        perfilDao.atualizarPerfil(perfil);
+        contatoDao.atualizarPerfil(perfil);
         Toast.makeText(EditarPerfilActivity.this, getString(R.string.perfil_atualizado), Toast.LENGTH_LONG).show();
         finish();
     }

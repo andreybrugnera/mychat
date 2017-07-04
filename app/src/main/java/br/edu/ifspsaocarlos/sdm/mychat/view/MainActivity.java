@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
-import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.ContatoDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 
 public class MainActivity extends Activity {
@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
     private Button btCriarPerfil;
     private Contato perfil;
 
-    private PerfilDAO perfilDao;
+    private ContatoDAO contatoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        perfilDao = new PerfilDAO(this);
+        contatoDao = new ContatoDAO(this);
 
         btEntrar = (Button) findViewById(R.id.bt_entrar);
         btCriarPerfil = (Button) findViewById(R.id.bt_criar_perfil);
@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
     }
 
     private boolean perfilCriado() {
-        this.perfil = perfilDao.buscaPerfil();
+        this.perfil = contatoDao.buscaPerfil();
         return perfil != null;
     }
 

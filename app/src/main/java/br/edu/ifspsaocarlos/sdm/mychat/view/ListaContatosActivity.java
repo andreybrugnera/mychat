@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
-import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.ContatoDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.service.VerificarNovasMensagensService;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
@@ -41,16 +41,16 @@ public class ListaContatosActivity extends ListActivity {
     private List<Contato> listaContatos = new ArrayList<>();
     private ContatoAdapter contatoAdapter;
     private Contato perfil;
-    private PerfilDAO perfilDao;
+    private ContatoDAO contatoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_contatos);
 
-        perfilDao = new PerfilDAO(this);
+        contatoDao = new ContatoDAO(this);
 
-        perfil = perfilDao.buscaPerfil();
+        perfil = contatoDao.buscaPerfil();
         setTitle(getString(R.string.contatos_de) + " " + perfil.getNome());
 
         carregarContatos();
@@ -112,8 +112,11 @@ public class ListaContatosActivity extends ListActivity {
                 try {
                     JSONArray contatos = response.getJSONArray(ContatoWS.CONTATOS);
                     for (int i = 0; i < contatos.length(); i++) {
-                        Contato contato = ContatoUtil.converterParaContato(contatos.getJSONObject(i));
-                        listaContatos.add(contato);
+                        JSONObject contatoJson = contatos.getJSONObject(i);
+                        Contato contato = ContatoUtil.converterParaContato(contatoJson);
+                        if (!contato.equals(perfil) && ContatoUtil.isContatoDoApp(contatoJson)) {
+                            listaContatos.add(contato);
+                        }
                     }
                     ContatoUtil.ordenarPorNome(listaContatos);
                     configurarListAdapter();

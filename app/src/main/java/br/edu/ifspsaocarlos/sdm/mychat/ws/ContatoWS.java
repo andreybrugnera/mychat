@@ -11,4 +11,7 @@ public abstract class ContatoWS extends WebServiceUtil {
     public static final String ID = "id";
     public static final String NOME = "nome_completo";
     public static final String APELIDO = "apelido";
+
+    //Usado para identificar contatos deste aplicativo no WS
+    public static final String APP_CONTATO_KEY = " [MY_CHAT]";
 }

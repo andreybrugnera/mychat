@@ -2,6 +2,8 @@ package br.edu.ifspsaocarlos.sdm.mychat.model;
 
 import java.io.Serializable;
 
+import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
+
 /**
  * Created by Andrey Brugnera on 17/06/2017.
  */
@@ -30,7 +32,7 @@ public class Contato implements Serializable {
     }
 
     public String getNome() {
-        return nome;
+        return nome.replace(ContatoWS.APP_CONTATO_KEY, "");
     }
 
     public void setNome(String nome) {

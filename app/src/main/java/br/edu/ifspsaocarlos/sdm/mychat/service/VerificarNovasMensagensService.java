@@ -28,8 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
+import br.edu.ifspsaocarlos.sdm.mychat.dao.ContatoDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.dao.MensagemDAO;
-import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Mensagem;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
@@ -47,7 +47,7 @@ import br.edu.ifspsaocarlos.sdm.mychat.ws.MensagemWS;
 public class VerificarNovasMensagensService extends Service {
     private List<Contato> listaContatos;
     private Contato perfil;
-    private PerfilDAO perfilDao;
+    private ContatoDAO contatoDao;
     private MensagemDAO mensagemDao;
 
     private Response.Listener<JSONObject> contatosResponseListener;
@@ -69,7 +69,7 @@ public class VerificarNovasMensagensService extends Service {
         super.onCreate();
         Log.i(getString(R.string.app_name), "Iniciando serviço de verificação de mensagens");
 
-        perfilDao = new PerfilDAO(this);
+        contatoDao = new ContatoDAO(this);
         mensagemDao = new MensagemDAO(this);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -89,7 +89,7 @@ public class VerificarNovasMensagensService extends Service {
     }
 
     private void carregarPerfil() {
-        perfil = perfilDao.buscaPerfil();
+        perfil = contatoDao.buscaPerfil();
     }
 
     private void atualizarListaContatosEBuscarNovasMensagens() {
@@ -113,8 +113,11 @@ public class VerificarNovasMensagensService extends Service {
                     try {
                         JSONArray contatos = response.getJSONArray(ContatoWS.CONTATOS);
                         for (int i = 0; i < contatos.length(); i++) {
-                            Contato contato = ContatoUtil.converterParaContato(contatos.getJSONObject(i));
-                            listaContatos.add(contato);
+                            JSONObject contatoJson = contatos.getJSONObject(i);
+                            Contato contato = ContatoUtil.converterParaContato(contatoJson);
+                            if (!contato.equals(perfil) && ContatoUtil.isContatoDoApp(contatoJson)) {
+                                listaContatos.add(contato);
+                            }
                         }
                         buscarNovasMensagens();
                     } catch (JSONException ex) {

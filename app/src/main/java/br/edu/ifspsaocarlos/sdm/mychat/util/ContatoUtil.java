@@ -43,7 +43,7 @@ public class ContatoUtil {
     public static JSONObject converterParaJSON(final Contato contato) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS.ID, contato.getId());
-        jsonObject.put(br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS.NOME, contato.getNome());
+        jsonObject.put(br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS.NOME, contato.getNome() + ContatoWS.APP_CONTATO_KEY);
         jsonObject.put(br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS.APELIDO, contato.getApelido());
         return jsonObject;
     }
@@ -61,5 +61,16 @@ public class ContatoUtil {
         contato.setNome(json.getString(ContatoWS.NOME));
         contato.setApelido(json.getString(ContatoWS.APELIDO));
         return contato;
+    }
+
+    /**
+     * Verifica se o contato pertence ao app
+     *
+     * @param json
+     * @return
+     * @throws JSONException
+     */
+    public static boolean isContatoDoApp(final JSONObject json) throws JSONException {
+        return json.getString(ContatoWS.NOME).contains(ContatoWS.APP_CONTATO_KEY);
     }
 }
