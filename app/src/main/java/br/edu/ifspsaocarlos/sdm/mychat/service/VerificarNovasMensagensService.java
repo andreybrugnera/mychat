@@ -198,6 +198,7 @@ public class VerificarNovasMensagensService extends Service {
         notificationBuilder.setContentTitle(getString(R.string.nova_mensagem_de) + " " + mensagem.getOrigem().getNome());
         notificationBuilder.setContentText(mensagem.getCorpo());
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setAutoCancel(Boolean.TRUE);
 
         //Intent para abrir tela do chat quando clicar na notificação
         Intent chatIntent = new Intent(this, ChatActivity.class);
