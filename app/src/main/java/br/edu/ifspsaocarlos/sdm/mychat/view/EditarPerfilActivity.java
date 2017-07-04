@@ -59,7 +59,7 @@ public class EditarPerfilActivity extends Activity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             Response.Listener<JSONObject> responseListener = atualizarPerfilResponseListener(perfil);
             Response.ErrorListener errorListener = criarErrorResponseListener();
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, ContatoWS.WS_CONTATO, contatoJSON, responseListener, errorListener);
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, ContatoWS.WS_CONTATO + "/" + perfil.getId(), contatoJSON, responseListener, errorListener);
             requestQueue.add(jsonRequest);
         } catch (JSONException ex) {
             Log.e(getString(R.string.app_name), "Erro ao converter o usuário em JSON");
