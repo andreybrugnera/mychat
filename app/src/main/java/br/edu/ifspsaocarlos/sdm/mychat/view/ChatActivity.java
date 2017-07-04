@@ -70,16 +70,20 @@ public class ChatActivity extends Activity {
 
         setTitle(getString(R.string.chat_com) + " " + destinatario.getNome());
 
-        //Carrega as mensagens armazenadas no banco SQLite interno
-        carregarMensagensGravadas();
-        //Carrega novas mensagens do WS
-        carregarMensagensWS();
-
+        listaMensagens = new ArrayList<>();
         this.mensagemAdapter = new MensagemAdapter(this, listaMensagens, perfil);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         this.recyclerView.setLayoutManager(mLayoutManager);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setAdapter(mensagemAdapter);
+
+        //Carrega as mensagens armazenadas no banco SQLite interno
+        carregarMensagensGravadas();
+        MensagemUtil.ordenarPorId(listaMensagens);
+        mensagemAdapter.notifyDataSetChanged();
+        moverParaUltimaMensagem();
+        //Carrega novas mensagens do WS
+        //carregarMensagensWS();
 
         iniciarThreadAtualizacao();
     }
@@ -87,7 +91,7 @@ public class ChatActivity extends Activity {
     private void iniciarThreadAtualizacao() {
         timer = new Timer();
         threadAtualizacao = new AtualizaMensagensThread();
-        timer.scheduleAtFixedRate(threadAtualizacao, TEMPO_ATUALIZACAO, TEMPO_ATUALIZACAO);
+        timer.scheduleAtFixedRate(threadAtualizacao, 0, TEMPO_ATUALIZACAO);
     }
 
     /**
@@ -97,7 +101,9 @@ public class ChatActivity extends Activity {
     private void carregarMensagensGravadas() {
         mensagemDao = new MensagemDAO(this);
 
-        this.listaMensagens = new ArrayList<>();
+        if (listaMensagens == null) {
+            this.listaMensagens = new ArrayList<>();
+        }
 
         List<Mensagem> liistaMensagensEnviadas = mensagemDao.buscarMensagens(perfil, destinatario);
         List<Mensagem> liistaMensagensRecebidas = mensagemDao.buscarMensagens(destinatario, perfil);
@@ -163,19 +169,22 @@ public class ChatActivity extends Activity {
                 try {
                     if (response != null) {
                         boolean novasMensagensEncontradas = false;
+                        List<Mensagem> listaMensagensNovas = new ArrayList<>();
+
                         JSONArray mensagens = response.getJSONArray(MensagemWS.MENSAGENS);
                         for (int i = 0; i < mensagens.length(); i++) {
                             JSONObject jsonObject = mensagens.getJSONObject(i);
                             Mensagem mensagem = MensagemUtil.converterParaMensagem(jsonObject);
                             if (mensagem.getId() > idUltimaMensagem) {
-                                listaMensagens.add(mensagem);
+                                listaMensagensNovas.add(mensagem);
                                 mensagemDao.salvarMensagem(mensagem);
                                 novasMensagensEncontradas = true;
                             }
                         }
                         //Atualiza lista
                         if (novasMensagensEncontradas) {
-                            MensagemUtil.ordenarPorId(listaMensagens);
+                            MensagemUtil.ordenarPorId(listaMensagensNovas);
+                            listaMensagens.addAll(listaMensagensNovas);
                             mensagemAdapter.notifyDataSetChanged();
                             moverParaUltimaMensagem();
                             atualizarIdUltimaMensagem();

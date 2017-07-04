@@ -32,6 +32,7 @@ import java.util.List;
 import br.edu.ifspsaocarlos.sdm.mychat.R;
 import br.edu.ifspsaocarlos.sdm.mychat.dao.PerfilDAO;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
+import br.edu.ifspsaocarlos.sdm.mychat.service.VerificarNovasMensagensService;
 import br.edu.ifspsaocarlos.sdm.mychat.util.ContatoUtil;
 import br.edu.ifspsaocarlos.sdm.mychat.view.adapter.ContatoAdapter;
 import br.edu.ifspsaocarlos.sdm.mychat.ws.ContatoWS;
@@ -62,7 +63,7 @@ public class ListaContatosActivity extends ListActivity {
     }
 
     private void iniciarServicoBuscaMensagens() {
-        Intent intentService = new Intent("SERVICE_MENSAGEM");
+        Intent intentService = new Intent(getApplicationContext(), VerificarNovasMensagensService.class);
         startService(intentService);
     }
 
