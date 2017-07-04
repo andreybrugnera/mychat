@@ -1,82 +1,81 @@
 package br.edu.ifspsaocarlos.sdm.mychat.view.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
 import br.edu.ifspsaocarlos.sdm.mychat.R;
+import br.edu.ifspsaocarlos.sdm.mychat.model.Contato;
 import br.edu.ifspsaocarlos.sdm.mychat.model.Mensagem;
 
 /**
  * Created by Andrey Brugnera on 28/06/2017.
  */
-public class MensagemAdapter extends ArrayAdapter<Mensagem> {
-    private List<Mensagem> listaMensagens;
+public class MensagemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
+    private List<Mensagem> listaMensagens;
+    private Contato perfil;
 
-    public MensagemAdapter(Context context, int resource, List<Mensagem> objects) {
-        super(context, resource, objects);
-        this.listaMensagens = objects;
+    private static final int TIPO_MESSAGEM_ENVIADA = 1;
+    private static final int TIPO_MESSAGEM_RECEBIDA = 2;
+
+    public MensagemAdapter(Context context, List<Mensagem> listaMensagens, Contato perfil) {
         this.context = context;
+        this.listaMensagens = listaMensagens;
+        this.perfil = perfil;
     }
 
     @Override
-    public int getCount() {
-        return listaMensagens != null ? listaMensagens.size() : 0;
+    public int getItemCount() {
+        return listaMensagens.size();
     }
 
     @Override
-    public Mensagem getItem(int position) {
-        return listaMensagens != null ? listaMensagens.get(position) : null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return listaMensagens != null ? listaMensagens.get(position).getId() : null;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+    public int getItemViewType(int position) {
         Mensagem mensagem = listaMensagens.get(position);
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.mensagem_layout, null);
-
-            TextView tvRemetente = (TextView) convertView.findViewById(R.id.tv_remetente);
-            TextView tvMensagem = (TextView) convertView.findViewById(R.id.tv_mensagem);
-
-            viewHolder = new ViewHolder(tvRemetente, tvMensagem);
-            convertView.setTag(viewHolder);
+        if (mensagem.getOrigem().equals(perfil)) {
+            return TIPO_MESSAGEM_ENVIADA;
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            return TIPO_MESSAGEM_RECEBIDA;
         }
-
-        viewHolder.getTvRemetente().setText(mensagem.getOrigem().getNome());
-        viewHolder.getTvMensagem().setText(mensagem.getCorpo());
-        return convertView;
     }
 
-    private class ViewHolder {
-        private TextView tvRemetente;
-        private TextView tvMensagem;
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
 
-        public ViewHolder(TextView tvRemetente, TextView tvMensagem) {
-            this.tvRemetente = tvRemetente;
-            this.tvMensagem = tvMensagem;
+        if (viewType == TIPO_MESSAGEM_ENVIADA) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensagem_enviada_layout, parent, false);
+        } else if (viewType == TIPO_MESSAGEM_RECEBIDA) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensagem_recebida_layout, parent, false);
+        }
+        return new MensagemHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Mensagem messagem = listaMensagens.get(position);
+        ((MensagemHolder) holder).bind(messagem);
+    }
+
+    private class MensagemHolder extends RecyclerView.ViewHolder {
+        TextView tvRemetente;
+        TextView tvMensagem;
+
+        MensagemHolder(View itemView) {
+            super(itemView);
+            tvRemetente = (TextView) itemView.findViewById(R.id.tv_remetente);
+            tvMensagem = (TextView) itemView.findViewById(R.id.tv_mensagem);
         }
 
-        public TextView getTvRemetente() {
-            return tvRemetente;
-        }
-
-        public TextView getTvMensagem() {
-            return tvMensagem;
+        void bind(Mensagem messagem) {
+            tvRemetente.setText(messagem.getOrigem().getNome());
+            tvMensagem.setText(messagem.getCorpo());
         }
     }
 }

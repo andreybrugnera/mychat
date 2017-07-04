@@ -2,10 +2,12 @@ package br.edu.ifspsaocarlos.sdm.mychat.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,11 +47,11 @@ public class ChatActivity extends Activity {
     private Contato perfil;
     private Contato destinatario;
     private List<Mensagem> listaMensagens;
-    private ListView listView;
     private MensagemAdapter mensagemAdapter;
     private EditText etMensagem;
     private Integer idUltimaMensagem = -1;
     private MensagemDAO mensagemDao;
+    private RecyclerView recyclerView;
 
     private static final int TEMPO_ATUALIZACAO = 2000;
     private AtualizaMensagensThread threadAtualizacao;
@@ -60,7 +62,7 @@ public class ChatActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        this.listView = (ListView) findViewById(R.id.list_mensagens);
+        this.recyclerView = (RecyclerView) findViewById(R.id.list_mensagens);
         this.etMensagem = (EditText) findViewById(R.id.et_mensagem);
 
         this.perfil = (Contato) getIntent().getSerializableExtra("perfil");
@@ -73,8 +75,11 @@ public class ChatActivity extends Activity {
         //Carrega novas mensagens do WS
         carregarMensagensWS();
 
-        mensagemAdapter = new MensagemAdapter(this, R.layout.mensagem_layout, listaMensagens);
-        listView.setAdapter(mensagemAdapter);
+        this.mensagemAdapter = new MensagemAdapter(this, listaMensagens, perfil);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        this.recyclerView.setLayoutManager(mLayoutManager);
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.recyclerView.setAdapter(mensagemAdapter);
 
         iniciarThreadAtualizacao();
     }
@@ -155,6 +160,7 @@ public class ChatActivity extends Activity {
             public void onResponse(JSONObject response) {
                 try {
                     if (response != null) {
+                        boolean novasMensagensEncontradas = false;
                         JSONArray mensagens = response.getJSONArray(MensagemWS.MENSAGENS);
                         for (int i = 0; i < mensagens.length(); i++) {
                             JSONObject jsonObject = mensagens.getJSONObject(i);
@@ -162,13 +168,16 @@ public class ChatActivity extends Activity {
                             if (mensagem.getId() > idUltimaMensagem) {
                                 listaMensagens.add(mensagem);
                                 mensagemDao.salvarMensagem(mensagem);
+                                novasMensagensEncontradas = true;
                             }
                         }
                         //Atualiza lista
-                        MensagemUtil.ordenarPorId(listaMensagens);
-                        mensagemAdapter.notifyDataSetChanged();
-                        moverParaUltimaMensagem();
-                        atualizarIdUltimaMensagem();
+                        if (novasMensagensEncontradas) {
+                            MensagemUtil.ordenarPorId(listaMensagens);
+                            mensagemAdapter.notifyDataSetChanged();
+                            moverParaUltimaMensagem();
+                            atualizarIdUltimaMensagem();
+                        }
                     }
                 } catch (JSONException ex) {
                     Log.e(getString(R.string.app_name), "Erro ao receber as mensagens");
@@ -219,12 +228,7 @@ public class ChatActivity extends Activity {
      * da lista de mensagens
      */
     private void moverParaUltimaMensagem() {
-        listView.post(new Runnable() {
-            @Override
-            public void run() {
-                listView.setSelection(mensagemAdapter.getCount() - 1);
-            }
-        });
+        recyclerView.smoothScrollToPosition(mensagemAdapter.getItemCount() - 1);
     }
 
     private class AtualizaMensagensThread extends TimerTask {

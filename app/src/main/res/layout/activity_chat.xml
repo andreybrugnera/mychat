@@ -37,10 +37,11 @@
 
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list_mensagens"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         android:layout_above="@+id/layout_tv_mensagem"
-        android:drawSelectorOnTop="false" />
+        android:drawSelectorOnTop="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
 </RelativeLayout>
